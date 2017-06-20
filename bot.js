@@ -110,6 +110,10 @@ function say (msg) {
 
   const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
   const rest = msg.content.split(' ').slice(2).join(' ')
+  if (rest.length > 20) {
+    msg.reply('I have a small brain, please keep your message under 20 characters.')
+    return
+  }
   speak.speak(rest, (err, wav) => {
     if (err) console.log(err)
 
