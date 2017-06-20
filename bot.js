@@ -1,7 +1,5 @@
 const discord = require('discord.js')
 const search = require('fuzzysearch')
-const ytStream = require('youtube-audio-stream2')
-const ytSearch = require('youtube-simple-search')
 const buttons = require('./buttons.json')
 const version = require('./package.json').version
 const path = require('path')
@@ -28,10 +26,10 @@ b.on('message', message => {
   }
 })
 
-b.on('ready', () => {
-  let channel = b.channels.find(ch => ch.name = 'buzzfeed')
-  b.sendMessage(channel, 'Arin Hanson is ready.')
-})
+// b.on('ready', () => {
+//   let channel = b.channels.find(ch => ch.name = 'buzzfeed')
+//   b.sendMessage(channel, 'Arin Hanson is ready.')
+// })
 
 const delegate = (b, msg) => {
   const splitted = msg.content.split(' ')
@@ -112,30 +110,7 @@ const playSound = (b, msg) => {
     b.sendMessage(msg.channel, 'Couldn\'t find a match!')
     return
   }
-  vc.playFile(path.join('./public', match.source))
-}
-
-const playRip = (b, msg) => {
-  if (!b.voiceConnections.has('server', msg.server)) {
-    b.sendMessage(msg.channel, 'I\'m not even in a voice channel.')
-    return
-  }
-  ytSearch({
-    key: process.env.YT_KEY,
-    query: `siivagunner ${msg.content.split(' ').splice(2).join(' ')}`,
-    maxResults: 5
-  }, res => {
-    res = res.filter(e => e.snippet.channelId === 'UC9ecwl3FTG66jIKA9JRDtmg')
-    if (res.length === 0) {
-      b.sendMessage(msg.channel, 'No matches found.')
-      return
-    }
-    let vc = b.voiceConnections.get('server', msg.server)
-    let vurl = `https://youtube.com/watch?v=${res[0].id.videoId}`
-    b.sendMessage(msg.channel, `Playing _${res[0].snippet.title}_.`)
-    let st = ytStream(vurl)
-    vc.playRawStream(st)
-  })
+  vc.playFile(path.join('./mp3', match.source))
 }
 
 const stopPlaying = (b, msg) => {
