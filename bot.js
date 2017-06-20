@@ -1,5 +1,6 @@
 const discord = require('discord.js')
 const search = require('fuzzysearch')
+const speak = require('espeak')
 const path = require('path')
 
 const buttons = require('./buttons.json')
@@ -15,7 +16,6 @@ const helpMsg = `Commands:
 `
 
 require('dotenv').config()
-
 const client = new discord.Client()
 
 client.on('ready', () => {
@@ -50,6 +50,9 @@ function delegate (msg) {
       break
     case 'play':
       playButton(msg)
+      break
+    case 'say':
+      say(msg)
       break
   }
 }
@@ -97,6 +100,21 @@ function playButton (msg) {
     return
   }
   vc.playFile(path.join('./mp3', match.source))
+}
+
+function say (msg) {
+  if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
+    msg.reply('I\'m not even in a voice channel.')
+    return
+  }
+
+  const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
+  const rest = msg.content.split(' ').slice(2).join(' ')
+  speak.speak(rest, (err, wav) => {
+    if (err) console.log(err)
+
+    vc.playArbitraryInput(wav.toDataUri())
+  })
 }
 
 client.login(process.env.BOT_TOKEN)
