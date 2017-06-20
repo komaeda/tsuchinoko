@@ -1,0 +1,25 @@
+{
+  "name": "arinhanson",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pup/arinhanson.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pup/arinhanson/issues"
+  },
+  "homepage": "https://github.com/pup/arinhanson#readme",
+  "dependencies": {
+    "discord.js": "8.2.0",
+    "fuzzysearch": "1.0.3",
+    "youtube-audio-stream2": "0.0.29",
+    "youtube-simple-search": "0.1.1"
+  }
+}
