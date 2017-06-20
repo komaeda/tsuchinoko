@@ -12,9 +12,7 @@ const helpMsg = `Commands:
 > __list__: List available sounds.
 > __play__: Play a sound. Auto-completes.
 > __stop__: Stop any music playback.
-> __rip__: Play a high-quality rip from YouTube.
-
-Made by penny. Version ${version}.`
+`
 
 require('dotenv').config()
 
