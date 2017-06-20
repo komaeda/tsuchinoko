@@ -1,8 +1,8 @@
 const discord = require('discord.js')
 const search = require('fuzzysearch')
-const buttons = require('./buttons.json')
-const version = require('./package.json').version
 const path = require('path')
+
+const buttons = require('./buttons.json')
 
 const helpMsg = `Commands:
 
@@ -16,116 +16,87 @@ const helpMsg = `Commands:
 
 require('dotenv').config()
 
-const b = new discord.Client()
+const client = new discord.Client()
 
-b.on('message', message => {
-  if (message.content.split(' ')[0] === `<@${process.env.BOT_ID}>` || message.content.split(' ')[0] === `<@!${process.env.BOT_ID}>`) {
-    delegate(b, message)
+client.on('ready', () => {
+  // let channel = client.channels.find(ch => ch.name = 'buzzfeed')
+  // channel.send('aaron carter can suck my dick')
+  console.log('arin hanson is ready to die')
+})
+
+client.on('message', message => {
+  const regex = new RegExp(`<@!?${process.env.BOT_ID}>`)
+  if (regex.test(message)) {
+    delegate(message)
   }
 })
 
-// b.on('ready', () => {
-//   let channel = b.channels.find(ch => ch.name = 'buzzfeed')
-//   b.sendMessage(channel, 'Arin Hanson is ready.')
-// })
-
-const delegate = (b, msg) => {
+function delegate (msg) {
   const splitted = msg.content.split(' ')
   const command = splitted[1]
 
   switch (command) {
     case 'help':
-      b.sendMessage(msg.channel, helpMsg)
+      msg.reply(helpMsg)
       break
     case 'join':
-      joinVoice(b, msg)
+      joinVoice(msg)
       break
     case 'leave':
-      leaveVoice(b, msg)
+      leaveVoice(msg)
       break
     case 'list':
-      listButtons(b, msg)
+      listButtons(msg)
       break
     case 'play':
-      playSound(b, msg)
-      break
-    case 'stop':
-      stopPlaying(b, msg)
-      break
-    case 'rip':
-      playRip(b, msg)
-      break
-    case 'nick':
-      changeNick(b, msg)
+      playButton(msg)
       break
   }
 }
 
-const changeNick = (b, msg) => {
-  let rest = msg.content.split(' ').slice(2).join(' ')
-  b.setNickname(msg.server, rest)
-}
-
-const joinVoice = (b, msg) => {
-  if (!msg.author.voiceChannel) {
-    b.sendMessage(msg.channel, 'How am I supposed to join a voice channel when you\'re not in one?')
+function joinVoice (msg) {
+  if (!msg.member.voiceChannel) {
+    msg.reply('you\'re not in a voice channel.')
     return
   }
-  if (b.voiceConnections.has('server', msg.server)) {
-    b.sendMessage(msg.channel, 'I\'m already in a voice channel.')
-    return
-  }
-  b.joinVoiceChannel(msg.author.voiceChannel, (err, conn) => {
-    b.sendMessage(msg.channel, `joined \`${conn.voiceChannel.name}\``)
+  msg.member.voiceChannel.join().then(conn => {
+    msg.reply(`joined \`${msg.member.voiceChannel.name}\``)
   })
 }
 
-const leaveVoice = (b, msg) => {
-  if (!b.voiceConnections.has('server', msg.server)) {
-    b.sendMessage(msg.channel, 'I\'m not even connected to a voice channel here.')
+function leaveVoice (msg) {
+  if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
+    msg.reply('I\'m not even connected to a voice channel.')
     return
   }
-  let vc = b.voiceConnections.get('server', msg.server)
-  vc.stopPlaying()
-  let vcname = b.voiceConnections.get('server', msg.server).voiceChannel.name
-  b.leaveVoiceChannel(b.voiceConnections.get('server', msg.server).voiceChannel, err => {
-    b.sendMessage(msg.channel, `left \`${vc.voiceChannel.name}\``)
-  })
+
+  const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
+  vc.disconnect()
 }
 
-const playSound = (b, msg) => {
-  if (!b.voiceConnections.has('server', msg.server)) {
-    b.sendMessage(msg.channel, 'I\'m not even in a voice channel.')
+function listButtons (msg) {
+  const res = buttons.reduce((acc, val) => {
+    return acc += `_${val.name}_\n`
+  }, '')
+  msg.reply(`\n${res}`)
+}
+
+function playButton (msg) {
+  if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
+    msg.reply('I\'m not even in a voice channel.')
     return
   }
-  let vc = b.voiceConnections.get('server', msg.server)
-  let rest = msg.content.split(' ').slice(2).join(' ')
-  let match = buttons.filter(e => {
-    let r = search(rest.toLowerCase(), e.name.toLowerCase())
-    return r
+
+  const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
+  const rest = msg.content.split(' ').slice(2).join(' ')
+  const match = buttons.filter(btn => {
+    return search(rest.toLowerCase(), btn.name.toLowerCase())
   })[0]
   if (!match) {
-    b.sendMessage(msg.channel, 'Couldn\'t find a match!')
+    msg.reply('couldn\'t find a match!')
     return
   }
   vc.playFile(path.join('./mp3', match.source))
 }
 
-const stopPlaying = (b, msg) => {
-  if (!b.voiceConnections.has('server', msg.server)) {
-    b.sendMessage(msg.channel, 'I\'m not even in a voice channel.')
-    return
-  }
-  let vc = b.voiceConnections.get('server', msg.server)
-  vc.stopPlaying()
-}
-
-const listButtons = (b, msg) => {
-  let res = ''
-  buttons.forEach(e => {
-    res += `_${e.name}_\n`
-  })
-  b.sendMessage(msg.channel, res)
-}
-
-b.loginWithToken(process.env.BOT_TOKEN)
+client.login(process.env.BOT_TOKEN)

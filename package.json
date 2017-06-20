@@ -17,8 +17,9 @@
   },
   "homepage": "https://github.com/pup/arinhanson#readme",
   "dependencies": {
-    "discord.js": "8.2.0",
+    "discord.js": "11.1.0",
     "dotenv": "4.0.0",
-    "fuzzysearch": "1.0.3"
+    "fuzzysearch": "1.0.3",
+    "node-opus": "0.2.6"
   }
 }
