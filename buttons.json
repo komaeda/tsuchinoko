@@ -1,72 +1,50 @@
 [
   {
     "name": "Flintstones",
-    "source": "/flint.mp3",
-    "color": "#AD2689"
+    "source": "/flint.mp3"
   },
   {
     "name": "Howie Scream",
-    "source": "/howie_scream.mp3",
-    "color": "#6C5E4A"
-  },
-  {
-    "name": "Loud Nigra (Full)",
-    "source": "/loud_nigra_full.mp3",
-    "color": "#E4BB6D"
+    "source": "/howie_scream.mp3"
   },
   {
     "name": "The Nutshack (Full)",
-    "source": "/the_nutshack_full.mp3",
-    "color": "#7704F7"
+    "source": "/the_nutshack_full.mp3"
   },
   {
     "name": "Childish Gambino (1)",
-    "source": "/childish_gambino_1.mp3",
-    "color": "#4FDF8C"
+    "source": "/childish_gambino_1.mp3"
   },
   {
     "name": "Childish Gambino (2)",
-    "source": "/childish_gambino_2.mp3",
-    "color": "#8A3023"
+    "source": "/childish_gambino_2.mp3"
   },
   {
     "name": "Buck Bumble Vocal",
-    "source": "/buckbumble.mp3",
-    "color": "#FA3D35"
-  },
-  {
-    "name": "Dicks (Joel)",
-    "source": "/dicks_joel.mp3",
-    "color": "#473CAD"
-  },
-  {
-    "name": "FLINTSTONES? (Joel)",
-    "source": "/flintstones_joel.mp3",
-    "color": "#37040B"
-  },
-  {
-    "name": "Dios Mio (Joel)",
-    "source": "/dios_mio_joel.mp3",
-    "color": "#E6DB8E"
+    "source": "/buckbumble.mp3"
   },
   {
     "name": "Nutshack Beep",
-    "source": "/nutshack_beep.mp3",
-    "color": "#25FC78"
+    "source": "/nutshack_beep.mp3"
   },
   {
     "name": "Snow Halation",
-    "source": "/snow_halation.mp3",
-    "color": "#AEDD75"
+    "source": "/snow_halation.mp3"
   },
   {
     "name": "BEGONE  THOT",
-    "source": "/begone_thot.mp3",
-    "color": "#000000"
+    "source": "/begone_thot.mp3"
   },
   {
     "name": "Darcatan Intro",
-    "source": "/darcatan_into.mp3",
-    "color": "#000000"
+    "source": "/darcatan_into.mp3"
+  },
+  {
+    "name": "A Cruel Angel's Thesis",
+    "source": "/out.wav"
+  },
+  {
+    "name": "(Romanji) A Cruel Angel's Thesis",
+    "source": "/out2.wav"
   }
 ]
