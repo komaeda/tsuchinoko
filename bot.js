@@ -6,6 +6,8 @@ const readline = require('readline')
 
 const buttons = require('./buttons.json')
 
+require('dotenv').config()
+
 const helpMsg = `Commands:
 
 > __help__: Show this message.
@@ -21,7 +23,6 @@ const responses = [
   'https://s-media-cache-ak0.pinimg.com/564x/87/5c/ce/875cce9c0185391b3747ede46b2fb827.jpg',
   'http://i3.kym-cdn.com/entries/icons/original/000/020/597/CaEyqJJUcAA60xu.jpg',
   'http://i3.kym-cdn.com/entries/icons/original/000/020/597/CaEyqJJUcAA60xu.jpg',
-  'game grump funny hjjjjjjjjj',
   'https://vignette4.wikia.nocookie.net/megamitensei/images/3/33/Rise_Kujikawa_render.png/revision/latest?cb=20120401110434',
   'https://pbs.twimg.com/media/DERI1PZUwAA6_42.jpg'
 ]
@@ -37,7 +38,7 @@ client.on('ready', () => {
   })
   let channel = client.channels.find(ch => ch.name === 'buzzfeed')
   rl.on('line', line => {
-    channel.send(line)
+    channel.send(line, { tts: true })
   })
   console.log('arin hanson is ready to die')
 })
@@ -47,6 +48,9 @@ client.on('message', message => {
   const hell = /arin(\s+hanson)?/ig
   if (hell.test(message)) {
     message.channel.send(responses[Math.floor(Math.random() * responses.length)])
+  }
+  if (/corndogg/ig.test(message)) {
+    message.channel.send("https://cdn.discordapp.com/attachments/178176400388259840/422540511761399819/ixautI0.jpg")
   }
   if (regex.test(message)) {
     delegate(message)
