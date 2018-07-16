@@ -4,7 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "exit 0"
   },
   "repository": {
     "type": "git",
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/pup/arinhanson#readme",
   "dependencies": {
-    "discord.js": "11.1.0",
-    "dotenv": "^4.0.0",
-    "espeak": "0.0.3",
+    "discord.js": "^11.3.2",
+    "dotenv": "^6.0.0",
+    "execa": "^0.10.0",
     "fuzzysearch": "1.0.3",
-    "node-opus": "0.2.6"
+    "node-opus": "^0.3.0"
   }
 }

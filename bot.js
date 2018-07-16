@@ -1,6 +1,6 @@
 const discord = require('discord.js')
 const search = require('fuzzysearch')
-const speak = require('espeak')
+const exec = require('execa')
 const path = require('path')
 const readline = require('readline')
 
@@ -16,16 +16,8 @@ const helpMsg = `Commands:
 > __list__: List available sounds.
 > __play__: Play a sound. Auto-completes.
 > __stop__: Stop any music playback.
+> __say__: Say something.
 `
-
-const responses = [
-  'https://pbs.twimg.com/media/CaEyqFvUkAAdzum.jpg',
-  'https://s-media-cache-ak0.pinimg.com/564x/87/5c/ce/875cce9c0185391b3747ede46b2fb827.jpg',
-  'http://i3.kym-cdn.com/entries/icons/original/000/020/597/CaEyqJJUcAA60xu.jpg',
-  'http://i3.kym-cdn.com/entries/icons/original/000/020/597/CaEyqJJUcAA60xu.jpg',
-  'https://vignette4.wikia.nocookie.net/megamitensei/images/3/33/Rise_Kujikawa_render.png/revision/latest?cb=20120401110434',
-  'https://pbs.twimg.com/media/DERI1PZUwAA6_42.jpg'
-]
 
 require('dotenv').config()
 const client = new discord.Client()
@@ -36,7 +28,7 @@ client.on('ready', () => {
     output: process.stdout,
     terminal: false
   })
-  let channel = client.channels.find(ch => ch.name === 'buzzfeed')
+  let channel = client.channels.find(ch => ch.name === 'main')
   rl.on('line', line => {
     channel.send(line, { tts: true })
   })
@@ -44,15 +36,17 @@ client.on('ready', () => {
 })
 
 client.on('message', message => {
-  const regex = new RegExp(`<@!?${process.env.BOT_ID}>`)
-  const hell = /arin(\s+hanson)?/ig
-  if (hell.test(message)) {
-    message.channel.send(responses[Math.floor(Math.random() * responses.length)])
-  }
+  const regex = new RegExp('^\/a')
+  const sayregex = new RegExp('^\/as')
+  const voiceregex = new RegExp('^\/af')
   if (/corndogg/ig.test(message)) {
     message.channel.send("https://cdn.discordapp.com/attachments/178176400388259840/422540511761399819/ixautI0.jpg")
   }
-  if (regex.test(message)) {
+  if (sayregex.test(message.content)) {
+    say(message, 1, "Alex")
+  } else if (voiceregex.test(message.content)) {
+    say(message, 1, "Fiona")
+  } else if (regex.test(message.content)) {
     delegate(message)
   }
 })
@@ -78,7 +72,7 @@ function delegate (msg) {
       playButton(msg)
       break
     case 'say':
-      say(msg)
+      say(msg, 2, "Alex")
       break
     case 'die':
       die(msg)
@@ -131,22 +125,20 @@ function playButton (msg) {
   vc.playFile(path.join('./mp3', match.source))
 }
 
-function say (msg) {
+function say (msg, sliceIndex, voice = "Alex") {
   if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
     msg.reply('I\'m not even in a voice channel.')
     return
   }
 
   const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
-  const rest = msg.content.split(' ').slice(2).join(' ')
-  if (rest.length > 20) {
-    msg.reply('I have a small brain, please keep your message under 20 characters.')
-    return
-  }
-  speak.speak(rest, (err, wav) => {
-    if (err) console.log(err)
-
-    vc.playArbitraryInput(wav.toDataUri())
+  const rest = msg.content.split(' ').slice(sliceIndex).join(' ')
+  exec.shell(`say -v ${voice} "${rest}" -o temp.aiff`).then(() => {
+    return exec.shell(`lame -m m temp.aiff temp.mp3`)
+  }).then(() => {
+    vc.playFile('./temp.mp3')
+  }).catch(err => {
+    console.log(err)
   })
 }
 
