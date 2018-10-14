@@ -17,6 +17,13 @@ const helpMsg = `Commands:
 > __play__: Play a sound. Auto-completes.
 > __stop__: Stop any music playback.
 > __say__: Say something.
+> __sayv__: Say something, accepts a macOS "say" voice as parameter.
+
+Root commands:
+
+> __/as__: Say something, alias of "/a say".
+> __/af__: Say something with a female voice.
+> __/tranter__: Say something with a British male voice.
 `
 
 require('dotenv').config()
@@ -28,17 +35,18 @@ client.on('ready', () => {
     output: process.stdout,
     terminal: false
   })
-  let channel = client.channels.find(ch => ch.name === 'main')
+  let channel = client.channels.find(ch => ch.name === 'post_office')
   rl.on('line', line => {
     channel.send(line, { tts: true })
   })
-  console.log('arin hanson is ready to die')
+  console.log('tsuchinoko is ready to die')
 })
 
 client.on('message', message => {
   const regex = new RegExp('^\/a')
   const sayregex = new RegExp('^\/as')
   const voiceregex = new RegExp('^\/af')
+  const tranterregex = new RegExp('^\/tranter')
   if (/corndogg/ig.test(message)) {
     message.channel.send("https://cdn.discordapp.com/attachments/178176400388259840/422540511761399819/ixautI0.jpg")
   }
@@ -46,6 +54,8 @@ client.on('message', message => {
     say(message, 1, "Alex")
   } else if (voiceregex.test(message.content)) {
     say(message, 1, "Fiona")
+  } else if (tranterregex.test(message.content)) {
+    say(message, 1, "Daniel")
   } else if (regex.test(message.content)) {
     delegate(message)
   }
@@ -71,6 +81,10 @@ function delegate (msg) {
     case 'play':
       playButton(msg)
       break
+    case 'sayv':
+      const voice = msg.content.split(' ')[2]
+      say(msg, 3, voice)
+      break
     case 'say':
       say(msg, 2, "Alex")
       break
@@ -87,6 +101,8 @@ function joinVoice (msg) {
   }
   msg.member.voiceChannel.join().then(conn => {
     msg.reply(`joined \`${msg.member.voiceChannel.name}\``)
+    msg.content = '/a Tsuchinoko is ready!'
+    say(msg, 1, "Karen")
   })
 }
 
@@ -96,6 +112,8 @@ function leaveVoice (msg) {
     return
   }
 
+  msg.content = '/a tsuchinoko out'
+  say(msg, 1, "Karen")
   const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
   vc.disconnect()
 }
@@ -126,13 +144,17 @@ function playButton (msg) {
 }
 
 function say (msg, sliceIndex, voice = "Alex") {
+  const eRegex = new RegExp('487614747156676609')
   if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
     msg.reply('I\'m not even in a voice channel.')
     return
   }
 
   const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
-  const rest = msg.content.split(' ').slice(sliceIndex).join(' ')
+  let rest = msg.content.split(' ').slice(sliceIndex).join(' ')
+  if (eRegex.test(rest)) {
+    rest = `OK I ADMIT IT I LOVE YOU OK i fucking love you and it breaks my heart when i see you play with someone else or anyone commenting in your profile i just want to be your boyfriend and put a heart in my profile linking to your profile and have a walltext of you commenting cute things i want to play video games talk in discord all night and watch a movie together but you just seem so uninterested in me it fucking kills me and i cant take it anymore i want to remove you but i care too much about you so please i'm begging you to either love me back or remove me and NEVER contact me again it hurts so much to say this because i need you by my side but if you don't love me then i want you to leave because seeing your icon in my friendlist would kill me everyday of my pathetic life`
+  }
   exec.shell(`say -v ${voice} "${rest}" -o temp.aiff`).then(() => {
     return exec.shell(`lame -m m temp.aiff temp.mp3`)
   }).then(() => {
