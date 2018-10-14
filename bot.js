@@ -51,11 +51,11 @@ client.on('message', message => {
     message.channel.send("https://cdn.discordapp.com/attachments/178176400388259840/422540511761399819/ixautI0.jpg")
   }
   if (sayregex.test(message.content)) {
-    say(message, 1, "Alex")
+    say(message, 1, "Alex", () => {})
   } else if (voiceregex.test(message.content)) {
-    say(message, 1, "Fiona")
+    say(message, 1, "Fiona", () => {})
   } else if (tranterregex.test(message.content)) {
-    say(message, 1, "Daniel")
+    say(message, 1, "Daniel", () => {})
   } else if (regex.test(message.content)) {
     delegate(message)
   }
@@ -83,10 +83,10 @@ function delegate (msg) {
       break
     case 'sayv':
       const voice = msg.content.split(' ')[2]
-      say(msg, 3, voice)
+      say(msg, 3, voice, () => {})
       break
     case 'say':
-      say(msg, 2, "Alex")
+      say(msg, 2, "Alex", () => {})
       break
     case 'die':
       die(msg)
@@ -102,7 +102,7 @@ function joinVoice (msg) {
   msg.member.voiceChannel.join().then(conn => {
     msg.reply(`joined \`${msg.member.voiceChannel.name}\``)
     msg.content = '/a Tsuchinoko is ready!'
-    say(msg, 1, "Karen")
+    say(msg, 1, "Karen", () => {})
   })
 }
 
@@ -113,9 +113,11 @@ function leaveVoice (msg) {
   }
 
   msg.content = '/a tsuchinoko out'
-  say(msg, 1, "Karen")
-  const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
-  vc.disconnect()
+  say(msg, 1, "Karen", () => {
+    const vc = client.voiceConnections.find('channel', msg.member.voiceChannel.connection.channel)
+    vc.disconnect()
+  })
+
 }
 
 function listButtons (msg) {
@@ -143,7 +145,7 @@ function playButton (msg) {
   vc.playFile(path.join('./mp3', match.source))
 }
 
-function say (msg, sliceIndex, voice = "Alex") {
+function say (msg, sliceIndex, voice = "Alex", cb) {
   const eRegex = new RegExp('487614747156676609')
   if (!client.voiceConnections.exists('channel', msg.member.voiceChannel.connection.channel)) {
     msg.reply('I\'m not even in a voice channel.')
@@ -158,7 +160,8 @@ function say (msg, sliceIndex, voice = "Alex") {
   exec.shell(`say -v ${voice} "${rest}" -o temp.aiff`).then(() => {
     return exec.shell(`lame -m m temp.aiff temp.mp3`)
   }).then(() => {
-    vc.playFile('./temp.mp3')
+    const status = vc.playFile('./temp.mp3')
+    status.on('end', () => cb())
   }).catch(err => {
     console.log(err)
   })

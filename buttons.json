@@ -1,9 +1,5 @@
 [
   {
-    "name": "Flintstones",
-    "source": "/flint.mp3"
-  },
-  {
     "name": "GTA San Andreas",
     "source": "/is.mp3"
   },
@@ -12,35 +8,15 @@
     "source": "/howie_scream.mp3"
   },
   {
-    "name": "The Nutshack (Full)",
-    "source": "/the_nutshack_full.mp3"
-  },
-  {
     "name": "Buck Bumble Vocal",
     "source": "/buckbumble.mp3"
-  },
-  {
-    "name": "Nutshack Beep",
-    "source": "/nutshack_beep.mp3"
-  },
-  {
-    "name": "Snow Halation",
-    "source": "/snow_halation.mp3"
   },
   {
     "name": "BEGONE  THOT",
     "source": "/begone_thot.mp3"
   },
   {
-    "name": "Darcatan Intro",
-    "source": "/darcatan_into.mp3"
-  },
-  {
-    "name": "A Cruel Angel's Thesis",
-    "source": "/out.wav"
-  },
-  {
-    "name": "(Romanji) A Cruel Angel's Thesis",
-    "source": "/out2.wav"
+    "name": "Petsmart",
+    "source": "/lasaga.mp3"
   }
 ]
