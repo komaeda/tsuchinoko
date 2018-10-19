@@ -157,6 +157,8 @@ function say (msg, sliceIndex, voice = "Alex", cb) {
   if (eRegex.test(rest)) {
     rest = `OK I ADMIT IT I LOVE YOU OK i fucking love you and it breaks my heart when i see you play with someone else or anyone commenting in your profile i just want to be your boyfriend and put a heart in my profile linking to your profile and have a walltext of you commenting cute things i want to play video games talk in discord all night and watch a movie together but you just seem so uninterested in me it fucking kills me and i cant take it anymore i want to remove you but i care too much about you so please i'm begging you to either love me back or remove me and NEVER contact me again it hurts so much to say this because i need you by my side but if you don't love me then i want you to leave because seeing your icon in my friendlist would kill me everyday of my pathetic life`
   }
+  voice = voice.replace(/(["\s'$`\\])/g,'\\$1')
+  rest = rest.replace(/(["\s'$`\\])/g,'\\$1')
   exec.shell(`say -v ${voice} "${rest}" -o temp.aiff`).then(() => {
     return exec.shell(`lame -m m temp.aiff temp.mp3`)
   }).then(() => {
