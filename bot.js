@@ -35,7 +35,7 @@ client.on('ready', () => {
     output: process.stdout,
     terminal: false
   })
-  let channel = client.channels.find(ch => ch.name === 'post_office')
+  let channel = client.channels.find(ch => ch.name === 'general')
   rl.on('line', line => {
     channel.send(line, { tts: true })
   })
